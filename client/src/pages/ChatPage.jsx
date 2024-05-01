@@ -9,6 +9,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { conversationsAtom, selectedConversationAtom } from "../../atoms/messagesAtom.js";
 import userAtom from "../../atoms/userAtom.js";
 import { useSocket } from "../../context/SocketContext.jsx";
+import SearchUser from "../components/SearchUser.jsx";
 
 const ChatPage = () => {
 	const [searchingUser, setSearchingUser] = useState(false);
@@ -132,17 +133,13 @@ const ChatPage = () => {
 				mx={"auto"}
 			>
 				<Flex flex={30} gap={2} flexDirection={"column"} maxW={{ sm: "250px", md: "full" }} mx={"auto"}>
-					<Text fontWeight={700} color={useColorModeValue("gray.600", "gray.400")}>
-						Your Conversations
-					</Text>
-					<form onSubmit={handleConversationSearch}>
-						<Flex alignItems={"center"} gap={2}>
-							<Input placeholder='Search for a user' onChange={(e) => setSearchText(e.target.value)} />
-							<Button size={"sm"} onClick={handleConversationSearch} isLoading={searchingUser}>
-								<SearchIcon />
-							</Button>
-						</Flex>
-					</form>
+					<Flex gap={2} alignItems={"center"}>
+						<Text fontWeight={700} color={useColorModeValue("gray.600", "gray.400")}>
+							Your Conversations
+						</Text>
+						<SearchUser/>
+					</Flex>
+					
 
 					{loadingConversations &&
 						[0, 1, 2, 3, 4].map((_, i) => (
@@ -177,7 +174,7 @@ const ChatPage = () => {
 						height={"400px"}
 					>
 						<GiConversation size={100} />
-						<Text fontSize={20}>Select a conversation to start messaging</Text>
+						<Text fontSize={20} textAlign={"center"}>Select a conversation to start messaging</Text>
 					</Flex>
 				)}
 

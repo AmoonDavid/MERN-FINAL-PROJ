@@ -103,18 +103,6 @@ const CreatePost = ({}) => {
 
 	return (
 		<>
-			{/* <Button
-				position={"fixed"}
-				bottom={10}
-				right={5}
-				bg={useColorModeValue("gray.300", "gray.dark")}
-				onClick={onOpen}
-				size={{ base: "sm", sm: "md" }}
-			>
-				<AddIcon />
-			</Button> */}
-			
-
 		<Button onClick={onOpen} variant={"ghost"} p={0} ><IoIosAddCircleOutline size={30}/></Button>
 
 			<Modal isOpen={isOpen} onClose={onClose}>

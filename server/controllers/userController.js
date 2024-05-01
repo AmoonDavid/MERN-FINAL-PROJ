@@ -106,9 +106,6 @@ const followUnfollowUser = async (req, res) => {
     }
 }
 
-//
-//
-
 const updateUser = async (req, res) => {
 	const { name, email, username, password, bio } = req.body;
 	let { profilePic } = req.body;
@@ -189,7 +186,7 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({error: err.message});
         console.log("Error in getUserProfile Controller", err.message);
     }
-}
+};
 
 const getSuggestedUsers = async (req, res) => {
     try {
@@ -226,7 +223,7 @@ const getSuggestedUsers = async (req, res) => {
         res.status(500).json({error: error.message});
         console.log("Error in getSuggestedUsers Controller", error.message);
     }
-}
+};
 
 const verifyEmail = async (req, res) => {
     const userId = req.user?._id.toString();
@@ -252,7 +249,7 @@ const verifyEmail = async (req, res) => {
         res.status(500).json({error: error.message});
         console.log("Error in verifyEmail Controller", error.message);
     }
-}
+};
 
 const checkVerifyEmail = async (req, res) => {
     const {emailToken} = req.params;
@@ -273,7 +270,31 @@ const checkVerifyEmail = async (req, res) => {
         res.status(500).json({error: error.message});
         console.log("Error in checkVerifyEmail Controller", error.message);
     }
+};
+
+const serachUser = async (req, res) => {
+    const currentUsername = req.user.username;
+    const {username} = req.params;
+    if(!username){
+        res.status(500).json({error: "User not Found"});
+        return;
+    }
+    try {
+        const users = await User.find({"username": { "$regex":  username, "$options": "i" }}).limit(5) ;
+
+        if(users.length < 1) {
+            res.status(500).json({error: "User not Found"});
+            return;
+        }
+        console.log(currentUsername);
+        const filterdUsers = users.filter((user) => user.username !== currentUsername);
+        res.status(200).json(filterdUsers);
+        
+    } catch (error) {
+        res.status(500).json({error: error.message});
+        console.log("Error in serachUser Controller", error.message);
+    }
 }
 
 
-export {signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getSuggestedUsers, verifyEmail, checkVerifyEmail};
+export {signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getSuggestedUsers, verifyEmail, checkVerifyEmail, serachUser};
