@@ -11,6 +11,8 @@ import { VscColorMode } from "react-icons/vsc";
 import { BsChatQuote } from "react-icons/bs";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import CreatePost from './CreatePost';
+import { IoSearch } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
 
 
 
@@ -22,16 +24,6 @@ const Header = () => {
     const user = useRecoilValue(userAtom);
     const navigate = useNavigate();
     
-    const handleUserPageClick = ()=> {
-      navigate(`/${user.username}`);
-    }
-    const handleHomePageClick = ()=> {
-      navigate("/");
-    }
-
-    const handleChatClick = ()=> {
-      navigate("/chat")
-    }
 
   return (
     <>
@@ -59,13 +51,14 @@ const Header = () => {
                   <SiHomebridge size={24}/>
                 </Link> */}
               
-              <Button onClick={handleHomePageClick} variant={"ghost"}><SiHomebridge size={24}/></Button>
+              <Button onClick={() => navigate("/")} variant={"ghost"}><SiHomebridge size={30}/></Button>
               
 
-                <Button onClick={handleUserPageClick} variant={"ghost"}><RxAvatar size={24}/></Button>
+                <Button onClick={() => navigate(`/${user.username}`)} variant={"ghost"}><RxAvatar size={30}/></Button>
+                <Button onClick={() => navigate(`/findposts`)} variant={"ghost"}><CiSearch size={30}/></Button>
                 
-                <Button variant={"ghost"} onClick={handleChatClick}><BsChatQuote size={24}/></Button>
-                <Button onClick={toggleColorMode} variant={"ghost"}><VscColorMode size={24}/></Button>
+                <Button variant={"ghost"} onClick={()=> navigate("/chat")}><BsChatQuote size={30}/></Button>
+                <Button onClick={toggleColorMode} variant={"ghost"}><VscColorMode size={30}/></Button>
 
                 <LogoutButton/>
             

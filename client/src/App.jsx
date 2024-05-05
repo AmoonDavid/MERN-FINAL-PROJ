@@ -13,6 +13,7 @@ import UpdateProfilePage from './pages/UpdateProfilePage'
 import CreatePost from './components/CreatePost'
 import ChatPage from './pages/ChatPage'
 import EmailVerificationPage from './pages/EmailVerificationPage'
+import FindPosts from './pages/FindPosts'
 
 
 
@@ -35,6 +36,7 @@ const App = () => {
           <Route path={"/chat"} element={ user?  <ChatPage/> : <Navigate to={"/auth"} /> }/>
           <Route  path={"/*"}element ={user ? <HomePage/> : <Navigate to={"/auth"}/>}/>
           <Route path={"/verify/:emailToken"} element={<EmailVerificationPage/>}/>
+          <Route path={"/findposts"} element={<FindPosts/>}/>
         </Routes>
       </Container>
     </Box>

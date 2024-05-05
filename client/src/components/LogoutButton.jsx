@@ -42,8 +42,8 @@ const LogoutButton = () => {
 		}
 	};
 	return (
-		<Button size={"sm"} onClick={handleLogout} variant={"ghost"}>
-			<AiOutlineLogout size={24} />
+		<Button size={"sm"} onClick={handleLogout} variant={"ghost"} p={5}>
+			<AiOutlineLogout size={30} />
 		</Button>
 	);
 };

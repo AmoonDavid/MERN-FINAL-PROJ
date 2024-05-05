@@ -44,7 +44,10 @@ const postSchema = mongoose.Schema({
 
         }
       ]  
-    }
+    },
+    postEmbedding: {
+        type: [],
+    },
 }, {
     timestamps: true,
 });

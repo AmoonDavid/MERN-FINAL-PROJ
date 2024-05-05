@@ -1,10 +1,12 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
 import {v2 as cloudinary} from 'cloudinary';
+import { HfInference } from "@huggingface/inference"
 
 const createPost = async (req, res) => {
     const {postedBy, text} = req.body;
     let {img} = req.body;
+    const hf = new HfInference(process.env.HUGGIN_FACE_TOKEN);
     try {
         if(!postedBy || !text) {
           return res.status(400).json({error:"PostedBy and the text fileds are required"});  
@@ -31,7 +33,13 @@ const createPost = async (req, res) => {
             return res.status(400).json({error:`Post text can not exceed ${maxLength} charecters`}); 
         }
 
-        const newPost = new Post({postedBy, text, img});
+        const postEmbedding = await hf.featureExtraction({
+            model: "mixedbread-ai/mxbai-embed-large-v1",
+            inputs: text,
+            
+          });
+
+        const newPost = new Post({postedBy, text, img, postEmbedding});
 
         await newPost.save();
 
@@ -191,4 +199,59 @@ const getUserPosts = async (req, res) => {
     }
 }
 
-export {createPost, getPost, deletePost, likeUnlikePost, replyToPost, getFeedPosts, getUserPosts};
+const findPosts = async(req, res) => {
+    try {
+        const {postQueryText} = req.body;
+
+        if(!postQueryText){
+            const genericPosts = await Post.aggregate([
+                {
+                  $sample: {
+                    size: 5
+                  }
+                },
+                {
+                  $project: {
+                    text_embedding: 0
+                  }
+                }
+              ]);
+
+              res.status(200).json(genericPosts);
+              return;
+        }
+        const hf = new HfInference(process.env.HUGGIN_FACE_TOKEN);
+        const queryEmbedding = await hf.featureExtraction({
+            model: "mixedbread-ai/mxbai-embed-large-v1",
+            inputs: postQueryText,     
+          });
+
+        console.log(queryEmbedding);
+        
+        const posts = await Post.aggregate([
+          {
+            $vectorSearch: {
+              index: 'vector_index',
+              path: 'postEmbedding',
+              queryVector: queryEmbedding,
+              numCandidates: 20,
+              limit: 5
+            }
+          },
+          {
+            $project: {
+              text_embedding: 0
+            }
+          }
+        ]);
+
+        console.log(posts);
+        res.status(200).json(posts);
+        
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log("Error in findPost Controller", err.message);
+    }
+}
+
+export {createPost, getPost, deletePost, likeUnlikePost, replyToPost, getFeedPosts, getUserPosts, findPosts};

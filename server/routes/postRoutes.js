@@ -1,6 +1,6 @@
 import express from "express";
 import protectRoute from "../middlewares/protectRoutes.js";
-import { createPost, deletePost, getFeedPosts, getPost, getUserPosts, likeUnlikePost, replyToPost } from "../controllers/postController.js";
+import { createPost, deletePost, findPosts, getFeedPosts, getPost, getUserPosts, likeUnlikePost, replyToPost } from "../controllers/postController.js";
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.route("/reply/:id").put(protectRoute, replyToPost);
 router.route("/feed").get(protectRoute, getFeedPosts);
 router.route("/:id").get(getPost);
 router.route("/user/:username").get(getUserPosts);
+router.route("/findposts").post(findPosts);
 
 
 export default router;
